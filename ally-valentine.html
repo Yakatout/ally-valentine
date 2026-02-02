@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ally 💘</title>
+  <style>
+    :root { --bg1:#fff0f6; --bg2:#f3f0ff; --ink:#111827; }
+    body{
+      margin:0; min-height:100vh; display:grid; place-items:center;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 800px at 20% 20%, var(--bg1), transparent 55%),
+                  radial-gradient(1200px 800px at 80% 80%, var(--bg2), transparent 55%),
+                  linear-gradient(180deg, #ffffff, #fafafa);
+      color:var(--ink);
+      overflow:hidden;
+    }
+    .card{
+      width:min(560px, 92vw);
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(17,24,39,.08);
+      border-radius: 24px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.10);
+      padding: 28px 22px;
+      text-align:center;
+      backdrop-filter: blur(6px);
+    }
+    .hearts{ font-size: 22px; letter-spacing: 2px; margin-bottom: 8px; }
+    h1{ margin:0 0 10px; font-size: clamp(24px, 4.4vw, 40px); }
+    p{ margin:0 0 18px; opacity:.9; line-height:1.35; font-size: 16px; }
+
+    .btnRow{
+      display:flex; gap:14px; justify-content:center; align-items:center;
+      padding-top:6px;
+      position: relative;
+      height: 86px;
+    }
+    button{
+      border:0; cursor:pointer;
+      font-size: 18px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      transition: transform .12s ease, box-shadow .12s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,.10);
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+    }
+    button:active{ transform: scale(.98); }
+
+    #yes{
+      background: linear-gradient(135deg, #ff4d6d, #ff8fab);
+      color:white;
+    }
+    #yes:hover{ transform: translateY(-1px); box-shadow: 0 10px 22px rgba(255,77,109,.25); }
+
+    #no{
+      background: #111827;
+      color:#fff;
+      position: relative;
+    }
+
+    .toast{
+      margin-top: 14px;
+      font-size: 16px;
+      font-weight: 650;
+      min-height: 24px;
+    }
+    .note{
+      margin-top: 14px;
+      font-size: 14px;
+      opacity: .75;
+    }
+    .tiny{
+      margin-top: 8px;
+      font-size: 13px;
+      opacity: .7;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="hearts">💘 💗 💞</div>
+    <h1>Ally, will you be my Valentine?</h1>
+    <p id="subtitle">I’m asking nicely… but also very enthusiastically 😌</p>
+
+    <div class="btnRow" id="arena">
+      <button id="yes">YES 💖</button>
+      <button id="no">No 🙈</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="note">Warning: the “No” button is a little shy. (Still respectful though.)</div>
+    <div class="tiny">Made with love + a tiny bit of mischief.</div>
+  </div>
+
+  <script>
+    const arena = document.getElementById("arena");
+    const yesBtn = document.getElementById("yes");
+    const noBtn  = document.getElementById("no");
+    const toast  = document.getElementById("toast");
+    const subtitle = document.getElementById("subtitle");
+
+    // Playful, not coercive: it dodges a few times, then stays put so "No" remains clickable.
+    let dodges = 0;
+    const MAX_DODGES = 5;
+
+    const dodgeLines = [
+      "Hehe nope 😅",
+      "Allyyyyy come on 😂",
+      "That button is being dramatic 🙃",
+      "Okay okay, last one… maybe 😇",
+      "Alright I’ll behave. (Mostly.) 💗"
+    ];
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function enableAbsolutePositionIfNeeded(){
+      if (getComputedStyle(noBtn).position !== "absolute") {
+        const a = arena.getBoundingClientRect();
+        const b = noBtn.getBoundingClientRect();
+        noBtn.style.position = "absolute";
+        noBtn.style.left = (b.left - a.left) + "px";
+        noBtn.style.top  = (b.top  - a.top) + "px";
+      }
+    }
+
+    function randomPositionWithinArena(button){
+      const a = arena.getBoundingClientRect();
+      const b = button.getBoundingClientRect();
+      const pad = 8;
+      const maxX = a.width - b.width - pad;
+      const maxY = a.height - b.height - pad;
+      return {
+        x: clamp(Math.random() * maxX + pad/2, pad/2, maxX),
+        y: clamp(Math.random() * maxY + pad/2, pad/2, maxY)
+      };
+    }
+
+    function dodge(){
+      if (dodges >= MAX_DODGES) return;
+      dodges++;
+
+      enableAbsolutePositionIfNeeded();
+      const { x, y } = randomPositionWithinArena(noBtn);
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+
+      noBtn.animate(
+        [
+          { transform: "rotate(0deg) scale(1)" },
+          { transform: "rotate(-9deg) scale(1.03)" },
+          { transform: "rotate(9deg) scale(1.03)" },
+          { transform: "rotate(0deg) scale(1)" }
+        ],
+        { duration: 260, easing: "ease-out" }
+      );
+
+      toast.textContent = dodgeLines[Math.min(dodges-1, dodgeLines.length-1)];
+    }
+
+    // Desktop hover
+    noBtn.addEventListener("mouseenter", dodge);
+
+    // Mobile touch
+    noBtn.addEventListener("touchstart", (e) => {
+      if (dodges < MAX_DODGES) e.preventDefault();
+      dodge();
+    }, { passive: false });
+
+    yesBtn.addEventListener("click", () => {
+      toast.textContent = "YESSSS 💞";
+      subtitle.textContent = "Officially my favourite human. Date night is on me 😌🍽️";
+
+      // soft heart confetti
+      for (let i = 0; i < 24; i++) {
+        const s = document.createElement("div");
+        s.textContent = ["💖","💘","💗","💕","💞"][Math.floor(Math.random()*5)];
+        s.style.position = "fixed";
+        s.style.left = Math.random()*100 + "vw";
+        s.style.top = "-22px";
+        s.style.fontSize = (18 + Math.random()*18) + "px";
+        s.style.transition = "transform 1.7s ease, opacity 1.7s ease";
+        document.body.appendChild(s);
+        requestAnimationFrame(() => {
+          s.style.transform = `translateY(${110 + Math.random()*40}vh) rotate(${Math.random()*240}deg)`;
+          s.style.opacity = "0";
+        });
+        setTimeout(() => s.remove(), 1750);
+      }
+    });
+
+    noBtn.addEventListener("click", () => {
+      toast.textContent = "Fair 🤍 I still choose you, always.";
+      subtitle.textContent = "Want to pick another day or do a cozy night instead? 🥰";
+    });
+  </script>
+</body>
+</html>
