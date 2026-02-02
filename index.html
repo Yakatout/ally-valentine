@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ally 💘</title>
   <style>
+    .subtitle-image{
+  width: 220px;
+  max-width: 80%;
+  border-radius: 12px;
+  margin-top: 8px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.2);
+}
     :root { --bg1:#fff0f6; --bg2:#f3f0ff; --ink:#111827; }
     body{
       margin:0; min-height:100vh; display:grid; place-items:center;
@@ -192,7 +199,7 @@
 
     noBtn.addEventListener("click", () => {
       toast.textContent = "Fair 🤍 I still choose you, always.";
-      subtitle.textContent = "Want to pick another day or do a cozy night instead? 🥰";
+      subtitle.innerHTML = '<img src="dafuq.jpeg" class="subtitle-image">';
     });
   </script>
 </body>
