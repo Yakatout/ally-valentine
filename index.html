@@ -185,7 +185,10 @@
     yesBtn.addEventListener("click", () => {
       toast.textContent = "YESSSS 💞, Can't wait to 👏 them 🍑 😁";
       subtitle.textContent = "I love you forever and I can't wait to spend the rest of my life with you.";
-      subtitle.innerHTML = '<img src="Sunset.jpg" class="subtitle-image">';
+        subtitle.insertAdjacentHTML(
+    "beforeend",
+    '<br><img src="Sunset.jpg" class="subtitle-image">'
+  );
 
 
       // soft heart confetti
