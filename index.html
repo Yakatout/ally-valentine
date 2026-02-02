@@ -12,6 +12,13 @@
   margin-top: 8px;
   box-shadow: 0 6px 14px rgba(0,0,0,.2);
 }
+    .subtitle-image{
+  width: 220px;
+  max-width: 80%;
+  border-radius: 12px;
+  margin-top: 8px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.2);
+}
     :root { --bg1:#fff0f6; --bg2:#f3f0ff; --ink:#111827; }
     body{
       margin:0; min-height:100vh; display:grid; place-items:center;
@@ -178,6 +185,8 @@
     yesBtn.addEventListener("click", () => {
       toast.textContent = "YESSSS 💞, Can't wait to 👏 them 🍑 😁";
       subtitle.textContent = "I love you forever and I can't wait to spend the rest of my life with you.";
+      subtitle.innerHTML = '<img src="Sunset.jpg" class="subtitle-image">';
+
 
       // soft heart confetti
       for (let i = 0; i < 24; i++) {
